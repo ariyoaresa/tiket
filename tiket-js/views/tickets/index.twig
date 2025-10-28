@@ -1,0 +1,43 @@
+{% extends "../base.twig" %}
+
+{% block content %}
+  <h1>Tickets</h1>
+  {% if tickets.length == 0 %}
+    <p>No tickets yet. <a href="/tickets/new">Create one</a>.</p>
+  {% else %}
+    <div class="tickets">
+      {% for t in tickets %}
+        <div class="card ticket">
+          <div class="ticket-header">
+            <div>
+              <span class="status {{ t.status }}">{{ t.status|capitalize }}</span>
+              <span class="priority {{ t.priority }}">Priority: {{ t.priority|capitalize }}</span>
+            </div>
+            <div class="actions">
+              <a href="/tickets/{{ t.id }}/edit" class="button">Edit</a>
+              <form method="post" action="/tickets/{{ t.id }}/delete" onsubmit="return confirm('Delete this ticket?');">
+                <button type="submit" class="button danger">Delete</button>
+              </form>
+            </div>
+          </div>
+          <h3 class="ticket-title">{{ t.title }}</h3>
+          {% if t.description %}
+            <p class="ticket-desc">{{ t.description }}</p>
+          {% endif %}
+          <div class="ticket-meta">
+            <small>Created: {{ t.createdAt|date('M d, Y H:i') }}</small>
+          </div>
+          <form class="status-form" method="post" action="/tickets/{{ t.id }}/status">
+            <label for="status-{{ t.id }}">Update status:</label>
+            <select id="status-{{ t.id }}" name="status">
+              {% for s in ['open','in_progress','closed'] %}
+                <option value="{{ s }}" {% if s == t.status %}selected{% endif %}>{{ s|capitalize }}</option>
+              {% endfor %}
+            </select>
+            <button type="submit" class="button">Save</button>
+          </form>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endblock %}

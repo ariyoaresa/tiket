@@ -1,0 +1,36 @@
+{% extends "../base.twig" %}
+{% block content %}
+  <h1>Edit Ticket</h1>
+  <form method="post" action="/tickets/{{ ticket.id }}" class="form">
+    <div class="form-group">
+      <label>Title</label>
+      <input name="title" required value="{{ ticket.title }}" placeholder="Ticket title">
+    </div>
+    <div class="form-group">
+      <label>Description</label>
+      <textarea name="description" rows="4" placeholder="Describe the issue">{{ ticket.description }}</textarea>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Priority</label>
+        <select name="priority">
+          <option value="low" {% if ticket.priority == 'low' %}selected{% endif %}>Low</option>
+          <option value="medium" {% if ticket.priority == 'medium' %}selected{% endif %}>Medium</option>
+          <option value="high" {% if ticket.priority == 'high' %}selected{% endif %}>High</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Status</label>
+        <select name="status">
+          <option value="open" {% if ticket.status == 'open' %}selected{% endif %}>Open</option>
+          <option value="in_progress" {% if ticket.status == 'in_progress' %}selected{% endif %}>In Progress</option>
+          <option value="closed" {% if ticket.status == 'closed' %}selected{% endif %}>Closed</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-actions">
+      <a href="/tickets" class="button">Cancel</a>
+      <button type="submit" class="button primary">Update</button>
+    </div>
+  </form>
+{% endblock %}

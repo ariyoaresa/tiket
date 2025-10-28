@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard - Tiket</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="dashboard-page">
+  <div class="page-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="container header-inner">
+        <div class="brand">Tiket</div>
+        <nav class="nav-links">
+          <a href="/dashboard" class="nav-link active">Dashboard</a>
+          <a href="/tickets" class="nav-link">Tickets</a>
+          <div class="user-menu">
+            <span class="user-name">{{ user.name }}</span>
+            <form method="post" action="/auth/logout" style="display: inline;">
+              <button type="submit" class="button secondary small">Logout</button>
+            </form>
+          </div>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container dashboard-main">
+      <div class="dashboard-header">
+        <h1>Welcome back, {{ user.name }}!</h1>
+        <p>Here's an overview of your ticket management system</p>
+      </div>
+
+      <!-- Statistics Cards -->
+      <div class="stats-grid">
+        <div class="stat-card total">
+          <div class="stat-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M9 12H15M9 16H15M17 21H7C5.89543 21 5 20.1046 5 19V5C5 3.89543 5.89543 3 7 3H12.5858C12.851 3 13.1054 3.10536 13.2929 3.29289L19.7071 9.70711C19.8946 9.89464 20 10.149 20 10.4142V19C20 20.1046 19.1046 21 18 21H17ZM17 21V10L12 5H7V19H17Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="stat-content">
+            <div class="stat-number">{{ stats.total }}</div>
+            <div class="stat-label">Total Tickets</div>
+          </div>
+        </div>
+
+        <div class="stat-card open">
+          <div class="stat-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 8V12L15 15M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="stat-content">
+            <div class="stat-number">{{ stats.open }}</div>
+            <div class="stat-label">Open Tickets</div>
+          </div>
+        </div>
+
+        <div class="stat-card in-progress">
+          <div class="stat-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2L15.09 8.26L22 9L17 14L18.18 21L12 17.77L5.82 21L7 14L2 9L8.91 8.26L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="stat-content">
+            <div class="stat-number">{{ stats.inProgress }}</div>
+            <div class="stat-label">In Progress</div>
+          </div>
+        </div>
+
+        <div class="stat-card closed">
+          <div class="stat-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="stat-content">
+            <div class="stat-number">{{ stats.closed }}</div>
+            <div class="stat-label">Resolved Tickets</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="quick-actions">
+        <h2>Quick Actions</h2>
+        <div class="actions-grid">
+          <a href="/tickets/new" class="action-card">
+            <div class="action-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="action-content">
+              <h3>Create New Ticket</h3>
+              <p>Report a new issue or request</p>
+            </div>
+          </a>
+
+          <a href="/tickets" class="action-card">
+            <div class="action-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M3 4H21V6H3V4ZM3 11H21V13H3V11ZM3 18H21V20H3V18Z" fill="currentColor"/>
+              </svg>
+            </div>
+            <div class="action-content">
+              <h3>View All Tickets</h3>
+              <p>Browse and manage existing tickets</p>
+            </div>
+          </a>
+
+          <a href="/tickets?status=open" class="action-card">
+            <div class="action-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 8V12L15 15M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="action-content">
+              <h3>Open Tickets</h3>
+              <p>Focus on unresolved issues</p>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <!-- Recent Activity -->
+      {% if stats.total > 0 %}
+      <div class="recent-activity">
+        <h2>Recent Activity</h2>
+        <div class="activity-card">
+          <p>You have <strong>{{ stats.open }}</strong> open tickets that need attention.</p>
+          {% if stats.inProgress > 0 %}
+            <p><strong>{{ stats.inProgress }}</strong> tickets are currently in progress.</p>
+          {% endif %}
+          {% if stats.closed > 0 %}
+            <p>Great job! You've resolved <strong>{{ stats.closed }}</strong> tickets.</p>
+          {% endif %}
+          <div class="activity-actions">
+            <a href="/tickets" class="button primary">Manage Tickets</a>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-bottom">
+          <small>&copy; {{ "now"|date("Y") }} Tiket. All rights reserved.</small>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Decorative elements -->
+    <div class="decorative-circle circle-dashboard-1"></div>
+    <div class="decorative-circle circle-dashboard-2"></div>
+  </div>
+</body>
+</html>

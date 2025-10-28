@@ -1,0 +1,8 @@
+{% extends "base.twig" %}
+{% block content %}
+  <div class="error-page">
+    <h1>404 - Not Found</h1>
+    <p>{{ message|default('The page you are looking for does not exist.') }}</p>
+    <a href="/tickets" class="button">Back to Tickets</a>
+  </div>
+{% endblock %}

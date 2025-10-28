@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login - Tiket</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="auth-page">
+  <div class="page-container">
+    <div class="auth-container">
+      <div class="auth-card">
+        <div class="auth-header">
+          <a href="/" class="brand">Tiket</a>
+          <h1>Welcome Back</h1>
+          <p>Sign in to your account to continue</p>
+        </div>
+        
+        <div id="toast-container"></div>
+        
+        <form id="loginForm" class="auth-form">
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email" required placeholder="Enter your email">
+            <div class="error-message" id="email-error"></div>
+          </div>
+          
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required placeholder="Enter your password">
+            <div class="error-message" id="password-error"></div>
+          </div>
+          
+          <button type="submit" class="button primary full-width" id="loginBtn">
+            <span class="btn-text">Sign In</span>
+            <span class="btn-loading" style="display: none;">Signing in...</span>
+          </button>
+        </form>
+        
+        <div class="auth-footer">
+          <p>Don't have an account? <a href="/auth/signup">Sign up</a></p>
+          <div class="demo-credentials">
+            <small>Demo credentials:</small>
+            <small>Email: admin@tiket.com | Password: admin123</small>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Decorative elements -->
+      <div class="decorative-circle circle-auth-1"></div>
+      <div class="decorative-circle circle-auth-2"></div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const btn = document.getElementById('loginBtn');
+      const btnText = btn.querySelector('.btn-text');
+      const btnLoading = btn.querySelector('.btn-loading');
+      
+      // Clear previous errors
+      document.querySelectorAll('.error-message').forEach(el => el.textContent = '');
+      clearToasts();
+      
+      // Get form data
+      const formData = new FormData(this);
+      const email = formData.get('email');
+      const password = formData.get('password');
+      
+      // Client-side validation
+      let hasErrors = false;
+      
+      if (!email) {
+        showFieldError('email-error', 'Email is required');
+        hasErrors = true;
+      } else if (!isValidEmail(email)) {
+        showFieldError('email-error', 'Please enter a valid email address');
+        hasErrors = true;
+      }
+      
+      if (!password) {
+        showFieldError('password-error', 'Password is required');
+        hasErrors = true;
+      }
+      
+      if (hasErrors) return;
+      
+      // Show loading state
+      btn.disabled = true;
+      btnText.style.display = 'none';
+      btnLoading.style.display = 'inline';
+      
+      try {
+        const response = await fetch('/auth/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email, password })
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+          showToast('Login successful! Redirecting...', 'success');
+          setTimeout(() => {
+            window.location.href = result.redirect;
+          }, 1000);
+        } else {
+          showToast(result.message || 'Login failed. Please try again.', 'error');
+        }
+      } catch (error) {
+        showToast('Network error. Please check your connection and try again.', 'error');
+      } finally {
+        // Reset button state
+        btn.disabled = false;
+        btnText.style.display = 'inline';
+        btnLoading.style.display = 'none';
+      }
+    });
+    
+    function isValidEmail(email) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+    
+    function showFieldError(elementId, message) {
+      document.getElementById(elementId).textContent = message;
+    }
+    
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = `toast toast-${type}`;
+      toast.textContent = message;
+      
+      container.appendChild(toast);
+      
+      // Trigger animation
+      setTimeout(() => toast.classList.add('show'), 100);
+      
+      // Auto remove
+      setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => container.removeChild(toast), 300);
+      }, 4000);
+    }
+    
+    function clearToasts() {
+      document.getElementById('toast-container').innerHTML = '';
+    }
+  </script>
+</body>
+</html>
